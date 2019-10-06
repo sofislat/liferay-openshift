@@ -15,9 +15,7 @@ echo $TIMEZONE >> /etc/timezone
 fi
 
 echo "INICIANDO LIFERAY...."
-cat > /opt/liferay/tomcat-*/bin/setenv.sh <<EOF
-CATALINA_OPTS="$CATALINA_OPTS -XX:MaxRAMFraction=1 -XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap -Dfile.encoding=UTF8 -XX:+ExitOnOutOfMemoryError -Djava.net.preferIPv4Stack=true -Djava.locale.providers=JRE,COMPAT,CLDR -Duser.timezone=$TIMEZONE"
-EOF
+
 
 sleep 2s
 exec /opt/liferay/tomcat*/bin/catalina.sh "$@"
