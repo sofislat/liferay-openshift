@@ -7,8 +7,8 @@ WORKDIR /opt
 RUN  wget https://github.com/liferay/liferay-portal/releases/download/7.2.0-ga1/liferay-ce-portal-tomcat-7.2.0-ga1-20190531153709761.tar.gz && \
 mkdir -p /opt/liferay && tar zxvf liferay*.tar.gz -C /opt/liferay --strip-components 1 && rm -rf /opt/*.tar.gz
 COPY run.sh /usr/bin/run.sh
-COPY setenv.sh /opt/liferay/tomcat*/bin/setenv.sh
-RUN rm -rf /etc/localtime  && touch /etc/timezone /etc/localtime && \
+COPY setenv.sh /opt/setenv.sh
+RUN mkdir -p /opt/liferay/custom_config && rm -rf /etc/localtime  && touch /etc/timezone /etc/localtime && \
 adduser -D -u 1001 -h /opt/liferay liferay && \
 usermod -aG 0 liferay && \
 chown 1001 -R /opt /usr/bin/run.sh /etc/timezone /etc/localtime  && \

@@ -28,15 +28,18 @@
 
   - apiVersion: v1
     data:
-      liferay.cfg: |-
-        [options]
-        db_host=postgresql
-        db_port=5432
-        db_user=liferay
-        db_password=liferay
-        addons_path=/opt/liferay/addons,/opt/liferay/custom_addons
-        data_dir=/opt/liferay/datadir
-        xmlrpc_port=8070
+      portal-setup-wizard.properties: |-
+        admin.email.from.address=test@liferay.com
+        admin.email.from.name=Test Test
+        company.default.locale=es_ES
+        company.default.web.id=liferay.com
+        default.admin.email.address.prefix=test
+        jdbc.default.driverClassName=org.postgresql.Driver
+        jdbc.default.password=liferay
+        jdbc.default.url=jdbc:postgresql://postgresql:5432/liferay
+        jdbc.default.username=liferay
+        liferay.home=/opt/liferay
+        setup.wizard.enabled=true
     kind: ConfigMap
     metadata:
       name: liferay
@@ -135,7 +138,10 @@
                   path: /
                 timeoutSeconds: 15              
               terminationMessagePath: /dev/termination-log
-              terminationMessagePolicy: File             
+              terminationMessagePolicy: File
+              volumeMounts:
+                - mountPath: /opt/liferay/custom_config
+                  name: liferay       
               ports:
                 - containerPort: 8080
                   protocol: TCP
@@ -145,6 +151,10 @@
           restartPolicy: Always
           schedulerName: default-scheduler
           terminationGracePeriodSeconds: 30          
+          volumes:
+            - configMap:
+                name: liferay
+              name: liferay       
       test: false
       triggers:
         - type: ConfigChange

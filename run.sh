@@ -15,5 +15,7 @@ echo $TIMEZONE >> /etc/timezone
 fi
 
 echo "INICIANDO LIFERAY...."
+cp -rf /opt/setenv.sh /opt/liferay/tomcat-*/bin/
+cat /opt/liferay/custom_config/portal-setup-wizard.properties > /opt/liferay/portal-setup-wizard.properties
 sleep 2s
 exec /opt/liferay/tomcat*/bin/catalina.sh "$@"
