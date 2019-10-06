@@ -39,7 +39,7 @@
         jdbc.default.url=jdbc:postgresql://postgresql:5432/liferay
         jdbc.default.username=liferay
         liferay.home=/opt/liferay
-        setup.wizard.enabled=true
+        setup.wizard.enabled=false
     kind: ConfigMap
     metadata:
       name: liferay
@@ -92,6 +92,10 @@
       name: "liferay"
     spec:
       replicas: 1
+      initContainers:
+      - name: wait-postgres
+        image: busybox:latest
+        command: ['sh', '-c', 'until nslookup postgresql; do echo waiting for postgresql; sleep 2; done;']        
       revisionHistoryLimit: 10
       selector:
         app: liferay-community
@@ -111,7 +115,7 @@
           labels:
             app: liferay-community
             deploymentconfig: liferay
-        spec:
+        spec:        
           containers:
             - env:
                 - name: TIMEZONE
@@ -214,6 +218,18 @@
                 periodSeconds: 10
                 successThreshold: 1
                 timeoutSeconds: 1
+              livenessProbe:
+                exec:
+                  command:
+                  - /bin/sh
+                  - -i
+                  - -c
+                  - psql -h 127.0.0.1 -U $POSTGRESQL_USER -q -d $POSTGRESQL_DATABASE -c 'SELECT 1'
+                failureThreshold: 3
+                initialDelaySeconds: 60
+                periodSeconds: 10
+                successThreshold: 1
+                timeoutSeconds: 1                
               resources:
                 limits:
                   cpu: 1000m

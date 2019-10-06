@@ -14,6 +14,8 @@ cat /usr/share/zoneinfo/$TIMEZONE >> /etc/localtime && \
 echo $TIMEZONE >> /etc/timezone
 fi
 
+until nc -z -v -w5 postgresql 5432; do echo waiting for postgres; sleep 5; done;
+
 echo "INICIANDO LIFERAY...."
 cp -rf /opt/setenv.sh /opt/liferay/tomcat-*/bin/
 cat /opt/liferay/custom_config/portal-setup-wizard.properties > /opt/liferay/portal-setup-wizard.properties
