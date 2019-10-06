@@ -14,7 +14,7 @@ usermod -aG 0 liferay && \
 chown 1001 -R /opt /usr/bin/run.sh /etc/timezone /etc/localtime  && \
 chgrp -R 0 /opt /usr/bin/run.sh /etc/timezone /etc/localtime && \
 chmod g=u -R /opt /usr/bin/run.sh /etc/timezone /etc/localtime && \
-chmod +x /usr/bin/run.sh && \
+chmod +x /usr/bin/run.sh /opt/liferay/tomcat*/bin/* && \
 rm -rf /var/cache/apk/*
 WORKDIR /opt/liferay
 ENV HOME /opt/liferay
