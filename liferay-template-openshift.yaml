@@ -91,11 +91,7 @@
         app: liferay-community
       name: "liferay"
     spec:
-      replicas: 1
-      initContainers:
-      - name: wait-postgres
-        image: busybox:latest
-        command: ['sh', '-c', 'until nslookup postgresql; do echo waiting for postgresql; sleep 2; done;']        
+      replicas: 1  
       revisionHistoryLimit: 10
       selector:
         app: liferay-community
