@@ -50,9 +50,9 @@
     spec:
       ports:
         - name: http
-          port: 8070
+          port: 8080
           protocol: TCP
-          targetPort: 8070
+          targetPort: 8080
         - name: ajp
           port: 8009
           protocol: TCP
