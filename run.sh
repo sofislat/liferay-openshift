@@ -15,7 +15,5 @@ echo $TIMEZONE >> /etc/timezone
 fi
 
 echo "INICIANDO LIFERAY...."
-
-
 sleep 2s
 exec /opt/liferay/tomcat*/bin/catalina.sh "$@"
