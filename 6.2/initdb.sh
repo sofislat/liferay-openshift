@@ -21,9 +21,10 @@ echo "INICIANDO LIFERAY...."
 
 
 if [ -f "/opt/liferay/custom_config/portal-setup-wizard.properties" ]; then
-
 cat /opt/liferay/custom_config/portal-setup-wizard.properties > /opt/liferay/portal-setup-wizard.properties
 echo "-----> ARCHIVO CONFIGURACION portal-setup-wizard.properties SETEADO"
+else
+echo "-----> ARCHIVO CONFIGURACION portal-setup-wizard.properties NO ENCONTRADO ERROR"
 exit 1
 fi
 
