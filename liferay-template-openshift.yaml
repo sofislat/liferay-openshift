@@ -137,6 +137,8 @@
                   value: mysql
                 - name: WAITFOR_PORT
                   value: '3306'
+                - name: CATALINA_OPTS
+                  value: "-XX:MaxRAMFraction=1 -XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap -Dfile.encoding=UTF8 -XX:+ExitOnOutOfMemoryError -Djava.net.preferIPv4Stack=true -Djava.locale.providers=JRE,COMPAT,CLDR -Duser.timezone=GMT"
               image: "liferay:${LIFERAY_VERSION}"
               imagePullPolicy: Always
               name: liferay
