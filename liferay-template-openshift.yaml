@@ -34,9 +34,9 @@
         company.default.locale=es_ES
         company.default.web.id=liferay.com
         default.admin.email.address.prefix=test
-        jdbc.default.driverClassName=org.postgresql.Driver
+        jdbc.default.driverClassName=com.mysql.jdbc.Driver
         jdbc.default.password=liferay
-        jdbc.default.url=jdbc:postgresql://postgresql:5432/liferay
+        jdbc.default.url=jdbc:mysql://postgresql:3306/liferay?useUnicode=true&characterEncoding=UTF-8&useFastDateParsing=false
         jdbc.default.username=liferay
         liferay.home=/opt/liferay
         setup.wizard.enabled=false
@@ -116,7 +116,11 @@
             - env:
                 - name: TIMEZONE
                   value: America/Montevideo
-              image: "liferay:latest"
+                - name: WAITFOR_HOST
+                  value: mysql
+                - name: WAITFOR_PORT
+                  value: '3306'
+              image: "liferay:${LIFERAY_VERSION}"
               imagePullPolicy: Always
               name: liferay
               livenessProbe:
@@ -164,20 +168,22 @@
               - liferay
             from:
               kind: ImageStreamTag
-              name: "liferay:latest"
+              name: "liferay:${LIFERAY_VERSION}"
           type: ImageChange
+
+
 
   - apiVersion: v1
     kind: DeploymentConfig
     metadata:
       labels:
         app: liferay-community
-      name: postgresql
+      name: mysql
     spec:
       replicas: 1
       selector:
         app: liferay-community
-        deploymentconfig: postgresql
+        deploymentconfig: mysql
       strategy:
         activeDeadlineSeconds: 21600
         resources: {}
@@ -186,21 +192,23 @@
         metadata:
           labels:
             app: liferay-community
-            deploymentconfig: postgresql
+            deploymentconfig: mysql
         spec:
           containers:
             - env:
-                - name: POSTGRESQL_USER
+                - name: MYSQL_ROOT_PASSWORD
                   value: liferay
-                - name: POSTGRESQL_PASSWORD
+                - name: MYSQL_USER
                   value: liferay
-                - name: POSTGRESQL_DATABASE
+                - name: MYSQL_PASSWORD
+                  value: liferay               
+                - name: MYSQL_DATABASE
                   value: liferay
-              image: postgresql:10
+              image: mysql:57
               imagePullPolicy: Always
-              name: postgresql
+              name: mysql
               ports:
-                - containerPort: 5432
+                - containerPort: 3306
                   protocol: TCP
               readinessProbe:
                 exec:
@@ -208,44 +216,28 @@
                   - /bin/sh
                   - -i
                   - -c
-                  - psql -h 127.0.0.1 -U $POSTGRESQL_USER -q -d $POSTGRESQL_DATABASE -c 'SELECT 1'
+                  - mysql -h 127.0.0.1 -u $MYSQL_USER -p $MYSQL_PASSWORD -D $MYSQL_DATABASE -e 'SELECT 1'
                 failureThreshold: 3
                 initialDelaySeconds: 60
                 periodSeconds: 10
                 successThreshold: 1
                 timeoutSeconds: 1
-              livenessProbe:
-                exec:
-                  command:
-                  - /bin/sh
-                  - -i
-                  - -c
-                  - psql -h 127.0.0.1 -U $POSTGRESQL_USER -q -d $POSTGRESQL_DATABASE -c 'SELECT 1'
-                failureThreshold: 3
-                initialDelaySeconds: 60
-                periodSeconds: 10
-                successThreshold: 1
-                timeoutSeconds: 1                
               resources:
                 limits:
-                  cpu: 1000m
                   memory: 512Mi
-                requests:
-                  cpu: 500m
-                  memory: 256Mi
               terminationMessagePath: /dev/termination-log
               terminationMessagePolicy: File
               volumeMounts:
-                - mountPath: /var/lib/pgsql/data
-                  name: postgresql-1
-                  subPath: postgresql
+                - mountPath: /var/lib/mysql/data
+                  name: mysql
+                  subPath: mysql
           dnsPolicy: ClusterFirst
           restartPolicy: Always
           schedulerName: default-scheduler
           securityContext: {}
           terminationGracePeriodSeconds: 30
           volumes:
-            - name: postgresql-1
+            - name: mysql
               persistentVolumeClaim:
                 claimName: liferay-data
       test: false
@@ -254,10 +246,10 @@
         - imageChangeParams:
             automatic: true
             containerNames:
-              - postgresql
+              - mysql
             from:
               kind: ImageStreamTag
-              name: 'postgresql:10'
+              name: 'mysql:57'
           type: ImageChange
 
 
@@ -267,33 +259,30 @@
     metadata:
       labels:
         app: liferay-community
-      name: postgresql
+      name: mysql
     spec:
       ports:
         - name: tcp
-          port: 5432
+          port: 3306
           protocol: TCP
-          targetPort: 5432
+          targetPort: 3306
       selector:
         app: liferay-community
-        deploymentconfig: postgresql
+        deploymentconfig: mysql
       sessionAffinity: None
       type: ClusterIP
-
 
 
   - apiVersion: v1
     kind: ImageStream
     metadata:
-        name: postgresql
+        name: mysql
     spec:
         tags:
-          - name: '10'
+          - name: '57'
             from:
                 kind: DockerImage
-                name: centos/postgresql-10-centos7:latest
-
-
+                name: centos/mysql-57-centos7
 
   - apiVersion: v1
     kind: BuildConfig
@@ -306,9 +295,9 @@
       output:
         to:
           kind: ImageStreamTag
-          name: liferay:latest
+          name: liferay:${LIFERAY_VERSION}
       source:
-        contextDir: .
+        contextDir: ${LIFERAY_VERSION}
         git:
           ref: master
           uri: 'https://github.com/mvilche/liferay-openshift.git'
@@ -342,3 +331,13 @@
         requests:
           storage: 100Gi
 
+
+
+  ################PARAMETROS
+  parameters:
+    - name: LIFERAY_VERSION
+      displayName: Version de liferay
+      value: '6.2'
+      required: true
+
+  ###############

@@ -1,0 +1,1 @@
+CATALINA_OPTS="$CATALINA_OPTS -XX:MaxRAMFraction=1 -XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap -Dfile.encoding=UTF8 -XX:+ExitOnOutOfMemoryError -Djava.net.preferIPv4Stack=true -Djava.locale.providers=JRE,COMPAT,CLDR -Duser.timezone=GMT"
