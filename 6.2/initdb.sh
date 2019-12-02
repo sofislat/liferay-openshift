@@ -33,7 +33,7 @@ if [ ! -d "/opt/liferay/data/initdb" ]; then
 echo "----> INICIALIZANDO DATABASE"
 /opt/liferay/tomcat*/bin/startup.sh
 
-until curl --max-time 2 http://127.0.0.1:8080 &> /dev/null; do echo waiting for liferay; tail -n 20 /opt/liferay/tomcat*/logs/catalina.out; sleep 20;  done;
+until curl --max-time 2 http://127.0.0.1:8080 &> /dev/null; do echo waiting for liferay; tail -n 20 /opt/liferay/tomcat*/logs/catalina.out; sleep 10;  done;
 curl --max-time 2 http://127.0.0.1:8080 &> /dev/null
 echo "FINALIZANDO INIT - SALIENDO CON CODIGO "$?
 sleep 10

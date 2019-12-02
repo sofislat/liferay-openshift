@@ -128,7 +128,9 @@
               volumeMounts:
                 - name: liferay-data
                   mountPath: /opt/liferay/data
-                  subPath: data              
+                  subPath: data
+                - mountPath: /opt/liferay/custom_config
+                  name: liferay                             
           containers:
             - env:
                 - name: TIMEZONE
