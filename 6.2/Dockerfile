@@ -10,9 +10,7 @@ WORKDIR /opt
 
 RUN  wget https://sourceforge.net/projects/lportal/files/Liferay%20Portal/6.2.5%20GA6/liferay-portal-tomcat-6.2-ce-ga6-20160112152609836.zip
 
-COPY run.sh /usr/bin/run.sh
-
-COPY setenv.sh /opt/setenv.sh
+COPY run.sh initdb.sh /usr/bin/
 
 RUN unzip liferay-portal-tomcat-6.2-ce-ga6-20160112152609836.zip && \
 rm -rf /opt/*.zip && \

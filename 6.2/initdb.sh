@@ -14,24 +14,26 @@ else
 	echo $TIMEZONE > /etc/timezone
 fi
 
-
-
-if [ ! -z "$WAITFOR_HOST" ] && [ ! -z "$WAITFOR_PORT" ] ; then
-	echo "···································································································"
-	echo "---->  WAITFOR  ACTIVADO.."
-    until nc -z -v -w5 $WAITFOR_HOST $WAITFOR_PORT &> /dev/null; do echo waiting for $WAITFOR_HOST; sleep 10; done;	
-	echo "···································································································"
-fi
-
-
 echo "INICIANDO LIFERAY...."
 cp -rf /opt/setenv.sh /opt/liferay/tomcat-*/bin/
 
 if [ -f "/opt/liferay/custom_config/portal-setup-wizard.properties" ];then
 
 cat /opt/liferay/custom_config/portal-setup-wizard.properties > /opt/liferay/portal-setup-wizard.properties
-echo "-----> ARCHIVO CONFIGURACION SETEADO"
+
+else
+
+echo "-----> ARCHIVO CONFIGURACION NO ENCONTRADO"
+
+exit 1
 
 fi
 
-exec /opt/liferay/tomcat*/bin/catalina.sh run
+/opt/liferay/tomcat*/bin/startup.sh
+
+until curl --max-time 2 http://localhost:8080 &> /dev/null; do echo waiting for liferay; sleep 10; done;
+
+
+
+
+

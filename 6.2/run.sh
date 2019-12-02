@@ -25,10 +25,19 @@ fi
 
 
 echo "INICIANDO LIFERAY...."
-cp -rf /opt/setenv.sh /opt/liferay/tomcat-*/bin/
 
 if [ -f "/opt/liferay/custom_config/portal-setup-wizard.properties" ];then
+
+cat /opt/liferay/custom_config/setenv.sh > /opt/liferay/tomcat-*/bin/setenv.sh
+echo "-----> ARCHIVO CONFIGURACION setenv.sh SETEADO"
+
+fi
+
+if [ -f "/opt/liferay/custom_config/portal-setup-wizard.properties" ];then
+
 cat /opt/liferay/custom_config/portal-setup-wizard.properties > /opt/liferay/portal-setup-wizard.properties
+echo "-----> ARCHIVO CONFIGURACION portal-setup-wizard.properties SETEADO"
+
 fi
 
 exec /opt/liferay/tomcat*/bin/catalina.sh run
