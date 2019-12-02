@@ -113,6 +113,8 @@
           labels:
             app: liferay-community
             deploymentconfig: liferay
+          annotations:
+            alpha.image.policy.openshift.io/resolve-names: '*'            
         spec:
           initContainers:
             - name: init-database
