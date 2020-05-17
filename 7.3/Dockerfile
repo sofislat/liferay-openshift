@@ -1,6 +1,6 @@
 FROM alpine:3.10
 
-ENV JDK_VERSION=openjdk8
+ENV JDK_VERSION=openjdk11-jre
 
 RUN apk add --update --no-cache $JDK_VERSION busybox-suid shadow wget curl bash unzip tzdata msttcorefonts-installer fontconfig && \
     update-ms-fonts && \
