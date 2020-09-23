@@ -33,4 +33,11 @@ echo "-----> ARCHIVO CONFIGURACION portal-setup-wizard.properties SETEADO"
 
 fi
 
+war=`ls -1 /opt/custom_war/*.war 2>/dev/null | wc -l`
+
+if [ $war != 0 ]; then
+echo "-----> ENCONTRANDO CUSTOM WARS"
+cp -rf /opt/custom_war/*.war /opt/liferay/deploy/
+fi
+
 exec /opt/liferay/tomcat*/bin/catalina.sh run
