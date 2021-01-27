@@ -8,7 +8,7 @@ RUN apk add --update --no-cache $JDK_VERSION busybox-suid shadow wget curl bash 
 
 WORKDIR /opt
 
-RUN  wget https://github.com/liferay/liferay-portal/releases/download/7.3.1-ga2/liferay-ce-portal-tomcat-7.3.1-ga2-20200327090859603.tar.gz
+RUN  wget https://github.com/liferay/liferay-portal/releases/download/7.3.5-ga6/liferay-ce-portal-tomcat-7.3.5-ga6-20200930172312275.tar.gz
 
 COPY run.sh /usr/bin/run.sh
 
