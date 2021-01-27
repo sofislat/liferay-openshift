@@ -5,7 +5,7 @@
     name: liferay-openshift-sofislat
     labels:
       template: liferay-openshift-sofislat
-      autor: "Martin_Fabrizzio_Vilche"
+      autor: "SOFIS"
     annotations:
       openshift.io/display-name: "liferay-openshift-sofislat"
       iconClass: "icon-github"
@@ -18,7 +18,7 @@
       openshift.io/support-url: "https://github.com/sofislat/liferay.git"
   message: >-
     Los servicios iniciarán en un par de minutos...
-    Martin Fabrizzio Vilche        
+          
 
   objects:
 
